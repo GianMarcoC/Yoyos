@@ -1,0 +1,860 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    overflow-x: hidden;
+}
+
+/* NAVEGACIÓN YOYO */
+.yoyo-nav {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 1000;
+}
+
+.yoyo {
+    width: 60px;
+    height: 60px;
+    background: #ff6b6b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.yoyo:hover {
+    animation: girar 1s infinite linear;
+    transform: scale(1.1);
+}
+
+@keyframes girar {
+    from { transform: rotate(0deg) scale(1.1); }
+    to { transform: rotate(360deg) scale(1.1); }
+}
+
+/* REDES SOCIALES */
+.social-floating {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.social-icon {
+    font-size: 1.2rem;
+    display: block;
+}
+
+.social-btn {
+    padding: 12px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-btn:hover {
+    transform: scale(1.1) translateX(-5px);
+}
+
+.youtube { background: #ff0000; }
+.discord { background: #5865f2; }
+.facebook { background: #1877f2; }
+
+/* SECCIONES */
+.section {
+    min-height: 100vh;
+    padding: 100px 20px 20px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.section.active {
+    display: flex;
+}
+
+/* HERO SECTION */
+.hero-content {
+    max-width: 800px;
+    text-align: center;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    margin: 20px 0;
+    opacity: 0.9;
+}
+
+.hero-yoyo {
+    font-size: 80px;
+    margin: 30px 0;
+    animation: flotar 3s ease-in-out infinite;
+}
+
+@keyframes flotar {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+.hero-desc {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    opacity: 0.8;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-btn {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cta-btn.secondary {
+    background: transparent;
+    border: 2px solid #ff6b6b;
+}
+
+.cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+}
+
+/* ESTILOS PARA SECCIONES DE CONTENIDO */
+.section-content {
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.section-subtitle {
+    text-align: center;
+    opacity: 0.8;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+    margin-top: 30px;
+}
+
+.content-grid.reverse {
+    grid-template-columns: 1fr 1fr;
+    direction: rtl;
+}
+
+.content-grid.reverse > * {
+    direction: ltr;
+}
+
+.text-content h3 {
+    color: #ffd700;
+    margin: 25px 0 10px;
+    font-size: 1.3rem;
+}
+
+.text-content p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+
+/* PLACEHOLDERS PARA IMÁGENES */
+.image-placeholder {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 40px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-placeholder.large {
+    min-height: 300px;
+}
+
+.image-placeholder span {
+    opacity: 0.7;
+    font-size: 1.1rem;
+}
+
+/* TIPOS DE YOYOS */
+.yoyo-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.type-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.type-image {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.type-card h3 {
+    color: #ffd700;
+    margin-bottom: 10px;
+}
+
+/* FLUJO DE MEMORIA */
+.memory-intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin: 40px 0;
+    align-items: center;
+}
+
+.memory-text h3 {
+    color: #ffd700;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+}
+
+.memory-text p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+
+.memory-features {
+    margin-top: 25px;
+}
+
+.memory-feature {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1.1rem;
+}
+
+.memory-feature:before {
+    content: "🎯";
+    margin-right: 10px;
+}
+
+/* DISCORD CTA */
+.discord-cta {
+    text-align: center;
+    padding: 40px;
+    background: rgba(88, 101, 242, 0.1);
+    border-radius: 20px;
+    margin-top: 50px;
+}
+
+.discord-cta h3 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.discord-cta p {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    opacity: 0.9;
+}
+
+.discord-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.discord-feature {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-size: 0.95rem;
+}
+
+.discord-link {
+    display: inline-block;
+    padding: 15px 30px;
+    background: #5865f2;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+}
+
+.discord-link:hover {
+    background: #4752c4;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(88, 101, 242, 0.3);
+}
+
+/* DESCARGAS */
+.download-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.game-features, .game-controls {
+    margin: 25px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.game-features h4, .game-controls h4 {
+    color: #ffd700;
+    margin-bottom: 15px;
+}
+
+.feature {
+    padding: 8px 0;
+    font-size: 1.1rem;
+}
+
+.control-item {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control-item strong {
+    color: #ffd700;
+}
+
+.apk-btn {
+    padding: 15px 30px;
+    font-size: 18px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.apk-btn:hover {
+    background: #45a049;
+    transform: scale(1.05);
+}
+
+.requirements {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.requirements h4 {
+    color: #ffd700;
+    margin-bottom: 5px;
+}
+
+.note {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* ==================== */
+/* RESPONSIVE DESIGN */
+/* ==================== */
+
+/* Tablets */
+@media (max-width: 768px) {
+    .yoyo-nav {
+        top: 10px;
+        gap: 10px;
+    }
+    
+    .yoyo {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .social-floating {
+        right: 10px;
+        top: auto;
+        bottom: 20px;
+        flex-direction: row;
+        transform: none;
+    }
+    
+    .social-btn {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .social-icon {
+        font-size: 1.1rem;
+    }
+    
+    .section {
+        padding: 80px 15px 15px;
+    }
+    
+    .content-grid,
+    .content-grid.reverse,
+    .download-content,
+    .memory-intro {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .content-grid.reverse {
+        direction: ltr;
+    }
+    
+    .yoyo-types {
+        grid-template-columns: 1fr;
+    }
+    
+    .image-placeholder {
+        min-height: 150px;
+    }
+    
+    .image-placeholder.large {
+        min-height: 200px;
+    }
+    
+    .discord-cta {
+        padding: 25px;
+    }
+    
+    .discord-features {
+        grid-template-columns: 1fr;
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+    .yoyo-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 300px;
+    }
+    
+    .yoyo {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+    
+    .social-floating {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        justify-content: center;
+        margin: 20px auto;
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .section {
+        padding: 100px 10px 10px;
+    }
+    
+    .memory-feature {
+        font-size: 1rem;
+    }
+    
+    .discord-feature {
+        font-size: 0.9rem;
+    }
+    
+    h1 { 
+        font-size: 1.8rem; 
+        margin-bottom: 15px;
+    }
+    
+    h2 { 
+        font-size: 1.3rem; 
+        margin-bottom: 15px;
+    }
+    
+    p {
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    
+    .apk-btn {
+        padding: 12px 25px;
+        font-size: 16px;
+    }
+}
+
+/* Pantallas muy grandes */
+@media (min-width: 1200px) {
+    .section {
+        padding: 120px 50px 50px;
+    }
+    
+    h1 { font-size: 3rem; }
+    h2 { font-size: 2rem; }
+}
+
+/* MEJORAS PARA CONTENIDO EXPANDIDO */
+.history-period {
+    margin-bottom: 40px;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border-left: 4px solid #ffd700;
+}
+
+.history-period h3 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.history-period p {
+    margin-bottom: 12px;
+    line-height: 1.7;
+}
+
+.history-fun-facts {
+    margin-top: 50px;
+    padding: 30px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 15px;
+}
+
+.history-fun-facts h3 {
+    text-align: center;
+    color: #ffd700;
+    margin-bottom: 25px;
+    font-size: 1.4rem;
+}
+
+.fun-facts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.fun-fact {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+/* MEJORAS RESPONSIVE PARA IMÁGENES */
+.image-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.image-placeholder {
+    transition: transform 0.3s ease;
+}
+
+.image-placeholder:hover {
+    transform: translateY(-5px);
+}
+
+/* RESPONSIVE MEJORADO */
+@media (max-width: 768px) {
+    .history-period {
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+    
+    .history-fun-facts {
+        padding: 20px;
+        margin-top: 30px;
+    }
+    
+    .fun-facts-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .fun-fact {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .image-content {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .history-period {
+        padding: 15px;
+    }
+    
+    .history-period h3 {
+        font-size: 1.1rem;
+    }
+    
+    .history-period p {
+        font-size: 0.9rem;
+    }
+}
+
+/* MEJORAS PARA LAS ANIMACIONES */
+.section {
+    min-height: 100vh;
+    padding: 100px 20px 20px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 1;
+    transition: opacity 0.5s ease !important;
+}
+
+.section.active {
+    display: flex;
+}
+
+/* Asegurar que los yoyos tengan buena posición durante animación */
+.yoyo-nav {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 1000;
+}
+
+.yoyo {
+    width: 60px;
+    height: 60px;
+    background: #ff6b6b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    position: relative; /* Importante para las animaciones */
+}
+
+/* Efecto de profundidad durante la caída */
+@keyframes caidaProfunda {
+    0% {
+        transform: translateY(0) rotate(0) scale(1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    50% {
+        transform: translateY(40vh) rotate(540deg) scale(0.85);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+    100% {
+        transform: translateY(80vh) rotate(1080deg) scale(0.7);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    }
+}
+
+/* Responsive para animaciones */
+@media (max-width: 768px) {
+    .yoyo-nav {
+        gap: 10px;
+    }
+    
+    .yoyo {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+/* MEJORAS PARA ANIMACIONES MÁS SUAVES */
+.yoyo {
+    width: 60px;
+    height: 60px;
+    background: #ff6b6b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    /* Asegurar buena renderización durante animaciones */
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.yoyo-nav {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 1000;
+    /* Prevenir saltos durante animación */
+    pointer-events: auto;
+}
+
+/* Estados del yoyo durante animación */
+.yoyo.animating {
+    pointer-events: none;
+}
+
+.section {
+    min-height: 100vh;
+    padding: 100px 20px 20px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 1;
+    transition: opacity 0.5s ease !important;
+}
+
+.section.active {
+    display: flex;
+}
+
+/* Overlay de transición - estilos base */
+.transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    z-index: 999;
+    pointer-events: none;
+}
+
+/* Responsive para animaciones */
+@media (max-width: 768px) {
+    .yoyo-nav {
+        gap: 10px;
+    }
+    
+    .yoyo {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+/* GARANTIZAR POSICIÓN ESTABLE DEL MENÚ */
+.yoyo-nav {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 1000;
+    /* Asegurar que el nav esté bien posicionado */
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    width: auto;
+    white-space: nowrap;
+}
+
+.yoyo {
+    width: 60px;
+    height: 60px;
+    background: #ff6b6b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    /* Posición relativa por defecto */
+    position: relative;
+    /* Sin márgenes que afecten el cálculo */
+    margin: 0;
+    flex-shrink: 0;
+}
+
+/* Reset más agresivo para estados animados */
+.yoyo[style] {
+    /* Las propiedades inline tienen prioridad */
+}
+
+@media (max-width: 768px) {
+    .yoyo-nav {
+        gap: 10px;
+        padding: 0 10px;
+    }
+    
+    .yoyo {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
