@@ -3,6 +3,7 @@ class YoyoNavigator {
         this.yoyos = document.querySelectorAll('.yoyo');
         this.sections = document.querySelectorAll('.section');
         this.isAnimating = false;
+        this.originalStyles = new Map(); // Para guardar mejor los estilos
         this.init();
     }
 
@@ -18,54 +19,98 @@ class YoyoNavigator {
     }
 
     animateYoyo(yoyo) {
-    this.isAnimating = true;
-    const targetSection = yoyo.getAttribute('data-target');
-    
-    // 1. Guardar estilos originales
-    const originalStyle = {
-        transform: yoyo.style.transform,
-        transition: yoyo.style.transition,
-        position: yoyo.style.position,
-        top: yoyo.style.top,
-        left: yoyo.style.left,
-        margin: yoyo.style.margin
-    };
+        this.isAnimating = true;
+        const targetSection = yoyo.getAttribute('data-target');
+        
+        // 1. Guardar estilos originales de forma más robusta
+        this.saveOriginalStyles(yoyo);
 
-    // 2. Calcular posición CORRECTA considerando el scroll
-    const navRect = document.querySelector('.yoyo-nav').getBoundingClientRect();
-    const yoyoRect = yoyo.getBoundingClientRect();
-    
-    // Obtener posición absoluta en la página (incluye scroll)
-    const absoluteYoyoLeft = yoyoRect.left + window.pageXOffset;
-    const absoluteYoyoTop = yoyoRect.top + window.pageYOffset;
-    
-    // Aplicar posición fixed MANTENIENDO la posición visual exacta
-    yoyo.style.position = 'fixed';
-    yoyo.style.top = `${absoluteYoyoTop}px`;
-    yoyo.style.left = `${absoluteYoyoLeft}px`;
-    yoyo.style.margin = '0';
-    yoyo.style.zIndex = '1001';
+        // 2. Calcular posición CORRECTA considerando el scroll
+        const yoyoRect = yoyo.getBoundingClientRect();
+        
+        // Obtener posición absoluta en la página (incluye scroll)
+        const absoluteYoyoLeft = yoyoRect.left + window.scrollX;
+        const absoluteYoyoTop = yoyoRect.top + window.scrollY;
+        
+        // Aplicar posición fixed MANTENIENDO la posición visual exacta
+        yoyo.style.position = 'fixed';
+        yoyo.style.top = `${absoluteYoyoTop}px`;
+        yoyo.style.left = `${absoluteYoyoLeft}px`;
+        yoyo.style.margin = '0';
+        yoyo.style.zIndex = '1001';
+        yoyo.style.width = `${yoyoRect.width}px`; // Mantener dimensiones
+        yoyo.style.height = `${yoyoRect.height}px`;
 
-    console.log('Posición calculada:', {
-        absoluteLeft: absoluteYoyoLeft,
-        absoluteTop: absoluteYoyoTop,
-        scrollX: window.pageXOffset,
-        scrollY: window.pageYOffset
-    });
+        // Forzar reflow para asegurar que los estilos se aplican
+        yoyo.offsetHeight;
 
-    // 3. Animación de CAÍDA desde posición corregida
-    setTimeout(() => {
-        yoyo.style.transition = 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
-        yoyo.style.transform = `translateY(calc(100vh - ${absoluteYoyoTop}px)) rotate(1080deg) scale(0.8)`;
-    }, 10);
+        console.log('Posición calculada:', {
+            absoluteLeft: absoluteYoyoLeft,
+            absoluteTop: absoluteYoyoTop,
+            scrollX: window.scrollX,
+            scrollY: window.scrollY,
+            clientRect: yoyoRect
+        });
 
-    // 4. Crear transición circular
-    setTimeout(() => {
-        this.createCircularTransition(targetSection, yoyo, originalStyle);
-    }, 650);
-}
+        // 3. Animación de CAÍDA desde posición corregida
+        requestAnimationFrame(() => {
+            yoyo.style.transition = 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
+            yoyo.style.transform = `translateY(calc(100vh - ${absoluteYoyoTop}px)) rotate(1080deg) scale(0.8)`;
+        });
 
-    createCircularTransition(targetSection, yoyo, originalStyle) {
+        // 4. Crear transición circular
+        setTimeout(() => {
+            this.createCircularTransition(targetSection, yoyo);
+        }, 650);
+    }
+
+    saveOriginalStyles(yoyo) {
+        const computedStyle = window.getComputedStyle(yoyo);
+        this.originalStyles.set(yoyo, {
+            position: computedStyle.position,
+            top: computedStyle.top,
+            left: computedStyle.left,
+            margin: computedStyle.margin,
+            transform: computedStyle.transform,
+            transition: computedStyle.transition,
+            width: computedStyle.width,
+            height: computedStyle.height,
+            zIndex: computedStyle.zIndex,
+            opacity: computedStyle.opacity
+        });
+    }
+
+    resetYoyo(yoyo) {
+        const originalStyle = this.originalStyles.get(yoyo);
+        if (!originalStyle) return;
+
+        // Primero quitar la transición para un reset instantáneo
+        yoyo.style.transition = 'none';
+        yoyo.style.transform = originalStyle.transform;
+        
+        // Restaurar estilos originales
+        yoyo.style.position = originalStyle.position;
+        yoyo.style.top = originalStyle.top;
+        yoyo.style.left = originalStyle.left;
+        yoyo.style.margin = originalStyle.margin;
+        yoyo.style.width = originalStyle.width;
+        yoyo.style.height = originalStyle.height;
+        yoyo.style.zIndex = originalStyle.zIndex;
+        yoyo.style.opacity = originalStyle.opacity;
+
+        // Forzar reflow
+        yoyo.offsetHeight;
+
+        // Restaurar transición original después del reset
+        setTimeout(() => {
+            yoyo.style.transition = originalStyle.transition;
+        }, 50);
+
+        // Limpiar del mapa
+        this.originalStyles.delete(yoyo);
+    }
+
+    createCircularTransition(targetSection, yoyo) {
         // Crear overlay de transición desde centro inferior
         const overlay = document.createElement('div');
         overlay.style.cssText = `
@@ -86,9 +131,9 @@ class YoyoNavigator {
         document.body.appendChild(overlay);
 
         // 1. Expandir círculo
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             overlay.style.transform = 'scale(3.5)';
-        }, 50);
+        });
 
         // 2. Cambiar sección
         setTimeout(() => {
@@ -102,27 +147,12 @@ class YoyoNavigator {
                 overlay.style.opacity = '0';
 
                 setTimeout(() => {
-                    this.resetYoyo(yoyo, originalStyle);
+                    this.resetYoyo(yoyo);
                     overlay.remove();
                     this.isAnimating = false;
                 }, 600);
             }, 400);
         }, 800);
-    }
-
-    resetYoyo(yoyo, originalStyle) {
-        // Restaurar estilos originales COMPLETAMENTE
-        yoyo.style.position = originalStyle.position || '';
-        yoyo.style.top = originalStyle.top || '';
-        yoyo.style.left = originalStyle.left || '';
-        yoyo.style.margin = originalStyle.margin || '';
-        yoyo.style.transform = originalStyle.transform || '';
-        yoyo.style.transition = originalStyle.transition || '';
-        yoyo.style.zIndex = '';
-        yoyo.style.opacity = '1';
-        
-        // Fuerza un reflow para asegurar el reset
-        yoyo.offsetHeight;
     }
 
     showSection(sectionId) {
@@ -134,9 +164,9 @@ class YoyoNavigator {
         const targetSection = document.getElementById(sectionId);
         if (targetSection) {
             targetSection.classList.add('active');
-            setTimeout(() => {
+            requestAnimationFrame(() => {
                 targetSection.style.opacity = '1';
-            }, 50);
+            });
         }
     }
 
