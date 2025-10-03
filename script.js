@@ -19,7 +19,7 @@ animateYoyo(yoyo) {
     const absoluteYoyoTop = yoyoRect.top + window.pageYOffset;
     
     // CORRECCIÓN MANUAL - ajusta estos valores según cuánto se desplaza
-    const correctionPixels = 120; // Prueba con 100, 120, 150, etc.
+    const correctionPixels = 500; // Prueba con 100, 120, 150, etc.
     const correctedLeft = absoluteYoyoLeft - correctionPixels;
     
     console.log('Corrección aplicada:', {
