@@ -3,7 +3,6 @@ class YoyoNavigator {
         this.yoyos = document.querySelectorAll('.yoyo');
         this.sections = document.querySelectorAll('.section');
         this.isAnimating = false;
-        this.originalStyles = new Map(); // Para guardar mejor los estilos
         this.init();
     }
 
@@ -22,96 +21,38 @@ class YoyoNavigator {
         this.isAnimating = true;
         const targetSection = yoyo.getAttribute('data-target');
         
-        // 1. Guardar estilos originales de forma más robusta
-        this.saveOriginalStyles(yoyo);
-
-        // 2. Calcular posición CORRECTA considerando el scroll
+        // SOLUCIÓN SIMPLE: Usar transform para la animación sin cambiar position
         const yoyoRect = yoyo.getBoundingClientRect();
         
-        // Obtener posición absoluta en la página (incluye scroll)
-        const absoluteYoyoLeft = yoyoRect.left + window.scrollX;
-        const absoluteYoyoTop = yoyoRect.top + window.scrollY;
+        // Guardar transform original
+        const originalTransform = yoyo.style.transform;
+        const originalTransition = yoyo.style.transition;
+        const originalZIndex = yoyo.style.zIndex;
         
-        // Aplicar posición fixed MANTENIENDO la posición visual exacta
-        yoyo.style.position = 'fixed';
-        yoyo.style.top = `${absoluteYoyoTop}px`;
-        yoyo.style.left = `${absoluteYoyoLeft}px`;
-        yoyo.style.margin = '0';
+        // Preparar para animación
         yoyo.style.zIndex = '1001';
-        yoyo.style.width = `${yoyoRect.width}px`; // Mantener dimensiones
-        yoyo.style.height = `${yoyoRect.height}px`;
-
-        // Forzar reflow para asegurar que los estilos se aplican
+        yoyo.style.transition = 'none';
+        
+        // Posicionar relativamente sin cambiar el layout
+        yoyo.style.transform = `translate(${window.scrollX}px, ${window.scrollY}px)`;
+        
+        // Forzar reflow
         yoyo.offsetHeight;
+        
+        // Ahora animar
+        yoyo.style.transition = 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
+        yoyo.style.transform = `translate(${window.scrollX}px, calc(100vh - ${yoyoRect.top}px)) rotate(1080deg) scale(0.8)`;
 
-        console.log('Posición calculada:', {
-            absoluteLeft: absoluteYoyoLeft,
-            absoluteTop: absoluteYoyoTop,
-            scrollX: window.scrollX,
-            scrollY: window.scrollY,
-            clientRect: yoyoRect
-        });
-
-        // 3. Animación de CAÍDA desde posición corregida
-        requestAnimationFrame(() => {
-            yoyo.style.transition = 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
-            yoyo.style.transform = `translateY(calc(100vh - ${absoluteYoyoTop}px)) rotate(1080deg) scale(0.8)`;
-        });
-
-        // 4. Crear transición circular
         setTimeout(() => {
-            this.createCircularTransition(targetSection, yoyo);
+            this.createCircularTransition(targetSection, yoyo, {
+                transform: originalTransform,
+                transition: originalTransition,
+                zIndex: originalZIndex
+            });
         }, 650);
     }
 
-    saveOriginalStyles(yoyo) {
-        const computedStyle = window.getComputedStyle(yoyo);
-        this.originalStyles.set(yoyo, {
-            position: computedStyle.position,
-            top: computedStyle.top,
-            left: computedStyle.left,
-            margin: computedStyle.margin,
-            transform: computedStyle.transform,
-            transition: computedStyle.transition,
-            width: computedStyle.width,
-            height: computedStyle.height,
-            zIndex: computedStyle.zIndex,
-            opacity: computedStyle.opacity
-        });
-    }
-
-    resetYoyo(yoyo) {
-        const originalStyle = this.originalStyles.get(yoyo);
-        if (!originalStyle) return;
-
-        // Primero quitar la transición para un reset instantáneo
-        yoyo.style.transition = 'none';
-        yoyo.style.transform = originalStyle.transform;
-        
-        // Restaurar estilos originales
-        yoyo.style.position = originalStyle.position;
-        yoyo.style.top = originalStyle.top;
-        yoyo.style.left = originalStyle.left;
-        yoyo.style.margin = originalStyle.margin;
-        yoyo.style.width = originalStyle.width;
-        yoyo.style.height = originalStyle.height;
-        yoyo.style.zIndex = originalStyle.zIndex;
-        yoyo.style.opacity = originalStyle.opacity;
-
-        // Forzar reflow
-        yoyo.offsetHeight;
-
-        // Restaurar transición original después del reset
-        setTimeout(() => {
-            yoyo.style.transition = originalStyle.transition;
-        }, 50);
-
-        // Limpiar del mapa
-        this.originalStyles.delete(yoyo);
-    }
-
-    createCircularTransition(targetSection, yoyo) {
-        // Crear overlay de transición desde centro inferior
+    createCircularTransition(targetSection, yoyo, originalStyles) {
         const overlay = document.createElement('div');
         overlay.style.cssText = `
             position: fixed;
@@ -130,26 +71,31 @@ class YoyoNavigator {
 
         document.body.appendChild(overlay);
 
-        // 1. Expandir círculo
         requestAnimationFrame(() => {
             overlay.style.transform = 'scale(3.5)';
         });
 
-        // 2. Cambiar sección
         setTimeout(() => {
             this.showSection(targetSection);
             yoyo.style.opacity = '0';
             
-            // 3. Contraer y limpiar
             setTimeout(() => {
                 overlay.style.transition = 'transform 0.6s ease, opacity 0.4s ease';
                 overlay.style.transform = 'scale(0)';
                 overlay.style.opacity = '0';
 
                 setTimeout(() => {
-                    this.resetYoyo(yoyo);
-                    overlay.remove();
-                    this.isAnimating = false;
+                    // Reset usando transform
+                    yoyo.style.transition = 'none';
+                    yoyo.style.transform = originalStyles.transform;
+                    yoyo.style.zIndex = originalStyles.zIndex;
+                    yoyo.style.opacity = '1';
+                    
+                    setTimeout(() => {
+                        yoyo.style.transition = originalStyles.transition;
+                        overlay.remove();
+                        this.isAnimating = false;
+                    }, 50);
                 }, 600);
             }, 400);
         }, 800);
@@ -164,9 +110,9 @@ class YoyoNavigator {
         const targetSection = document.getElementById(sectionId);
         if (targetSection) {
             targetSection.classList.add('active');
-            requestAnimationFrame(() => {
+            setTimeout(() => {
                 targetSection.style.opacity = '1';
-            });
+            }, 50);
         }
     }
 
@@ -186,19 +132,10 @@ class YoyoNavigator {
     }
 }
 
-// Inicializar
 document.addEventListener('DOMContentLoaded', () => {
     new YoyoNavigator();
 });
 
-// Botón de descarga
 document.querySelector('.apk-btn')?.addEventListener('click', () => {
     alert('¡Próximamente disponible para descarga!');
-});
-
-// Transiciones suaves
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.section').forEach(section => {
-        section.style.transition = 'opacity 0.5s ease';
-    });
 });
