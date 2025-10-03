@@ -21,66 +21,48 @@ class YoyoNavigator {
         this.isAnimating = true;
         const targetSection = yoyo.getAttribute('data-target');
         
-        // 1. Guardar estilos originales COMPLETOS
+        // 1. Guardar estilos originales
         const originalStyle = {
             transform: yoyo.style.transform,
             transition: yoyo.style.transition,
             position: yoyo.style.position,
             top: yoyo.style.top,
             left: yoyo.style.left,
-            right: yoyo.style.right,
-            bottom: yoyo.style.bottom,
-            margin: yoyo.style.margin,
-            width: yoyo.style.width,
-            height: yoyo.style.height
+            margin: yoyo.style.margin
         };
 
-        // 2. Calcular posición ABSOLUTA exacta
+        // 2. Calcular posición con corrección manual
         const yoyoRect = yoyo.getBoundingClientRect();
         const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
         const scrollY = window.pageYOffset || document.documentElement.scrollTop;
         
-        // Posición absoluta en la página
-        const absoluteYoyoLeft = yoyoRect.left + scrollX;
-        const absoluteYoyoTop = yoyoRect.top + scrollY;
+        // Posición absoluta en la página CON CORRECCIÓN
+        const correctionPixels = 10; // Ajusta este valor según necesites
+        const absoluteYoyoLeft = (yoyoRect.left + scrollX) - correctionPixels;
+        const absoluteYoyoTop = (yoyoRect.top + scrollY) - correctionPixels;
         
-        // Guardar dimensiones originales
-        const originalWidth = yoyoRect.width;
-        const originalHeight = yoyoRect.height;
+        console.log('Posición calculada con corrección:', {
+            originalLeft: yoyoRect.left + scrollX,
+            originalTop: yoyoRect.top + scrollY,
+            correctedLeft: absoluteYoyoLeft,
+            correctedTop: absoluteYoyoTop,
+            correction: correctionPixels
+        });
 
-        // 3. Aplicar posición fixed MANTENIENDO la posición visual exacta
-        // IMPORTANTE: Remover cualquier transform existente temporalmente
-        const currentTransform = yoyo.style.transform;
-        yoyo.style.transform = 'none';
-        
+        // 3. Aplicar posición fixed con corrección
         yoyo.style.position = 'fixed';
         yoyo.style.top = `${absoluteYoyoTop}px`;
         yoyo.style.left = `${absoluteYoyoLeft}px`;
-        yoyo.style.width = `${originalWidth}px`;
-        yoyo.style.height = `${originalHeight}px`;
         yoyo.style.margin = '0';
         yoyo.style.zIndex = '1001';
 
-        console.log('Posición fixed aplicada:', {
-            left: absoluteYoyoLeft,
-            top: absoluteYoyoTop,
-            width: originalWidth,
-            height: originalHeight
-        });
-
-        // 4. Forzar reflow antes de la animación
-        yoyo.offsetHeight;
-
-        // 5. Animación de CAÍDA desde posición corregida
+        // 4. Animación de CAÍDA desde posición corregida
         setTimeout(() => {
             yoyo.style.transition = 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
-            // Restaurar transform original si existía y añadir animación
-            const transformParts = currentTransform ? [currentTransform] : [];
-            transformParts.push(`translateY(calc(100vh - ${absoluteYoyoTop}px))`, 'rotate(1080deg)', 'scale(0.8)');
-            yoyo.style.transform = transformParts.join(' ');
+            yoyo.style.transform = `translateY(calc(100vh - ${absoluteYoyoTop}px)) rotate(1080deg) scale(0.8)`;
         }, 10);
 
-        // 6. Crear transición circular
+        // 5. Crear transición circular
         setTimeout(() => {
             this.createCircularTransition(targetSection, yoyo, originalStyle);
         }, 650);
@@ -132,21 +114,15 @@ class YoyoNavigator {
     }
 
     resetYoyo(yoyo, originalStyle) {
-        // Primero remover todos los estilos temporales
-        yoyo.style.cssText = '';
-        
-        // Luego restaurar estilos originales uno por uno
-        Object.keys(originalStyle).forEach(property => {
-            if (originalStyle[property] !== undefined && originalStyle[property] !== '') {
-                yoyo.style[property] = originalStyle[property];
-            }
-        });
-        
-        // Asegurar que estos estilos estén limpios
+        // Restaurar estilos originales COMPLETAMENTE
+        yoyo.style.position = originalStyle.position || '';
+        yoyo.style.top = originalStyle.top || '';
+        yoyo.style.left = originalStyle.left || '';
+        yoyo.style.margin = originalStyle.margin || '';
+        yoyo.style.transform = originalStyle.transform || '';
+        yoyo.style.transition = originalStyle.transition || '';
         yoyo.style.zIndex = '';
         yoyo.style.opacity = '1';
-        yoyo.style.width = '';
-        yoyo.style.height = '';
         
         // Fuerza un reflow para asegurar el reset
         yoyo.offsetHeight;
