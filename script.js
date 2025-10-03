@@ -21,45 +21,52 @@ class YoyoNavigator {
         this.isAnimating = true;
         const targetSection = yoyo.getAttribute('data-target');
         
-        // 1. Guardar estilos originales
+        // 1. Guardar estilos originales COMPLETOS
         const originalStyle = {
             transform: yoyo.style.transform,
             transition: yoyo.style.transition,
             position: yoyo.style.position,
             top: yoyo.style.top,
             left: yoyo.style.left,
-            margin: yoyo.style.margin
+            margin: yoyo.style.margin,
+            width: yoyo.style.width,
+            height: yoyo.style.height
         };
 
-        // 2. Calcular posición con corrección manual
+        // 2. CALCULO CORREGIDO - Usando getBoundingClientRect() correctamente
         const yoyoRect = yoyo.getBoundingClientRect();
-        const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
-        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
         
-        // Posición absoluta en la página CON CORRECCIÓN
-        const correctionPixels = 10; // Ajusta este valor según necesites
-        const absoluteYoyoLeft = (yoyoRect.left + scrollX) - correctionPixels;
-        const absoluteYoyoTop = (yoyoRect.top + scrollY) - correctionPixels;
+        // Posición absoluta CORRECTA considerando scroll
+        const absoluteYoyoLeft = yoyoRect.left + window.scrollX;
+        const absoluteYoyoTop = yoyoRect.top + window.scrollY;
         
-        console.log('Posición calculada con corrección:', {
-            originalLeft: yoyoRect.left + scrollX,
-            originalTop: yoyoRect.top + scrollY,
-            correctedLeft: absoluteYoyoLeft,
-            correctedTop: absoluteYoyoTop,
-            correction: correctionPixels
+        console.log('DEBUG Posición:', {
+            clientLeft: yoyoRect.left,
+            clientTop: yoyoRect.top,
+            scrollX: window.scrollX,
+            scrollY: window.scrollY,
+            absoluteLeft: absoluteYoyoLeft,
+            absoluteTop: absoluteYoyoTop
         });
 
-        // 3. Aplicar posición fixed con corrección
+        // 3. Aplicar posición fixed MANTENIENDO la posición visual exacta
         yoyo.style.position = 'fixed';
         yoyo.style.top = `${absoluteYoyoTop}px`;
         yoyo.style.left = `${absoluteYoyoLeft}px`;
         yoyo.style.margin = '0';
         yoyo.style.zIndex = '1001';
+        // Mantener dimensiones exactas
+        yoyo.style.width = `${yoyoRect.width}px`;
+        yoyo.style.height = `${yoyoRect.height}px`;
 
         // 4. Animación de CAÍDA desde posición corregida
         setTimeout(() => {
             yoyo.style.transition = 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
-            yoyo.style.transform = `translateY(calc(100vh - ${absoluteYoyoTop}px)) rotate(1080deg) scale(0.8)`;
+            // Calcular distancia hasta el fondo de la ventana
+            const viewportHeight = window.innerHeight;
+            const fallDistance = viewportHeight - yoyoRect.top;
+            
+            yoyo.style.transform = `translateY(${fallDistance}px) rotate(1080deg) scale(0.8)`;
         }, 10);
 
         // 5. Crear transición circular
@@ -121,6 +128,8 @@ class YoyoNavigator {
         yoyo.style.margin = originalStyle.margin || '';
         yoyo.style.transform = originalStyle.transform || '';
         yoyo.style.transition = originalStyle.transition || '';
+        yoyo.style.width = originalStyle.width || '';
+        yoyo.style.height = originalStyle.height || '';
         yoyo.style.zIndex = '';
         yoyo.style.opacity = '1';
         
