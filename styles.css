@@ -38,13 +38,7 @@ body {
 }
 
 .yoyo:hover {
-    animation: girar 1s infinite linear;
-    transform: scale(1.1);
-}
-
-@keyframes girar {
-    from { transform: rotate(0deg) scale(1.1); }
-    to { transform: rotate(360deg) scale(1.1); }
+    transform: scale(1.05);
 }
 
 /* REDES SOCIALES */
@@ -114,12 +108,6 @@ body {
 .hero-yoyo {
     font-size: 80px;
     margin: 30px 0;
-    animation: flotar 3s ease-in-out infinite;
-}
-
-@keyframes flotar {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
 }
 
 .hero-desc {
@@ -697,21 +685,7 @@ body {
     position: relative; /* Importante para las animaciones */
 }
 
-/* Efecto de profundidad durante la caída */
-@keyframes caidaProfunda {
-    0% {
-        transform: translateY(0) rotate(0) scale(1);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-    50% {
-        transform: translateY(40vh) rotate(540deg) scale(0.85);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-    }
-    100% {
-        transform: translateY(80vh) rotate(1080deg) scale(0.7);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-    }
-}
+/* Animaciones de caída eliminadas (JS removed). */
 
 /* Responsive para animaciones */
 @media (max-width: 768px) {
@@ -777,18 +751,7 @@ body {
     display: flex;
 }
 
-/* Overlay de transición - estilos base */
-.transition-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 50%;
-    z-index: 999;
-    pointer-events: none;
-}
+/* Transition overlays removed (handled by JS animation previously) */
 
 /* Responsive para animaciones */
 @media (max-width: 768px) {
@@ -841,9 +804,7 @@ body {
 }
 
 /* Reset más agresivo para estados animados */
-.yoyo[style] {
-    /* Las propiedades inline tienen prioridad */
-}
+/* Inline styles (if any) will override these rules; no empty selector needed */
 
 @media (max-width: 768px) {
     .yoyo-nav {
