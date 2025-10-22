@@ -7,19 +7,27 @@
 body {
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-attachment: fixed;
+    background-size: cover;
     color: white;
     overflow-x: hidden;
+    min-height: 100vh;
 }
 
-/* NAVEGACIÓN YOYO */
+/* NAVEGACIÓN YOYO - SOLO ESTA VERSIÓN */
 .yoyo-nav {
     position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 0;
+    left: 0;
+    right: 0;
     display: flex;
     gap: 20px;
     z-index: 1000;
+    padding: 12px 16px;
+    backdrop-filter: blur(6px);
+    background: rgba(0,0,0,0.12);
+    justify-content: center;
+    align-items: center;
 }
 
 .yoyo {
@@ -53,11 +61,6 @@ body {
     z-index: 1000;
 }
 
-.social-icon {
-    font-size: 1.2rem;
-    display: block;
-}
-
 .social-btn {
     padding: 12px;
     border-radius: 50%;
@@ -78,15 +81,16 @@ body {
 .discord { background: #5865f2; }
 .facebook { background: #1877f2; }
 
-/* SECCIONES */
+/* SECCIONES - VERSIÓN LIMPIA */
 .section {
     min-height: 100vh;
-    padding: 100px 20px 20px;
+    padding: 150px 20px 40px;
     display: none;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
+    position: relative;
 }
 
 .section.active {
@@ -144,7 +148,7 @@ body {
     box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
 }
 
-/* ESTILOS PARA SECCIONES DE CONTENIDO */
+/* CONTENIDO DE SECCIONES */
 .section-content {
     max-width: 1200px;
     width: 100%;
@@ -167,7 +171,6 @@ body {
 }
 
 .content-grid.reverse {
-    grid-template-columns: 1fr 1fr;
     direction: rtl;
 }
 
@@ -395,149 +398,7 @@ body {
     font-style: italic;
 }
 
-/* ==================== */
-/* RESPONSIVE DESIGN */
-/* ==================== */
-
-/* Tablets */
-@media (max-width: 768px) {
-    .yoyo-nav {
-        top: 10px;
-        gap: 10px;
-    }
-    
-    .yoyo {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-    }
-    
-    .social-floating {
-        right: 10px;
-        top: auto;
-        bottom: 20px;
-        flex-direction: row;
-        transform: none;
-    }
-    
-    .social-btn {
-        width: 45px;
-        height: 45px;
-    }
-    
-    .social-icon {
-        font-size: 1.1rem;
-    }
-    
-    .section {
-        padding: 80px 15px 15px;
-    }
-    
-    .content-grid,
-    .content-grid.reverse,
-    .download-content,
-    .memory-intro {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .content-grid.reverse {
-        direction: ltr;
-    }
-    
-    .yoyo-types {
-        grid-template-columns: 1fr;
-    }
-    
-    .image-placeholder {
-        min-height: 150px;
-    }
-    
-    .image-placeholder.large {
-        min-height: 200px;
-    }
-    
-    .discord-cta {
-        padding: 25px;
-    }
-    
-    .discord-features {
-        grid-template-columns: 1fr;
-    }
-    
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.5rem; }
-}
-
-/* Móviles */
-@media (max-width: 480px) {
-    .yoyo-nav {
-        flex-wrap: wrap;
-        justify-content: center;
-        max-width: 300px;
-    }
-    
-    .yoyo {
-        width: 45px;
-        height: 45px;
-        font-size: 18px;
-    }
-    
-    .social-floating {
-        position: relative;
-        right: auto;
-        bottom: auto;
-        justify-content: center;
-        margin: 20px auto;
-        width: 100%;
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .section {
-        padding: 100px 10px 10px;
-    }
-    
-    .memory-feature {
-        font-size: 1rem;
-    }
-    
-    .discord-feature {
-        font-size: 0.9rem;
-    }
-    
-    h1 { 
-        font-size: 1.8rem; 
-        margin-bottom: 15px;
-    }
-    
-    h2 { 
-        font-size: 1.3rem; 
-        margin-bottom: 15px;
-    }
-    
-    p {
-        font-size: 0.9rem;
-        line-height: 1.4;
-    }
-    
-    .apk-btn {
-        padding: 12px 25px;
-        font-size: 16px;
-    }
-}
-
-/* Pantallas muy grandes */
-@media (min-width: 1200px) {
-    .section {
-        padding: 120px 50px 50px;
-    }
-    
-    h1 { font-size: 3rem; }
-    h2 { font-size: 2rem; }
-}
-
-/* MEJORAS PARA CONTENIDO EXPANDIDO */
+/* HISTORIA MEJORADA */
 .history-period {
     margin-bottom: 40px;
     padding: 25px;
@@ -600,8 +461,72 @@ body {
     transform: translateY(-5px);
 }
 
-/* RESPONSIVE MEJORADO */
+/* ==================== */
+/* RESPONSIVE DESIGN */
+/* ==================== */
+
+/* Tablets */
 @media (max-width: 768px) {
+    .yoyo-nav {
+        gap: 10px;
+        padding: 8px 10px;
+    }
+    
+    .yoyo {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .social-floating {
+        right: 10px;
+        top: auto;
+        bottom: 20px;
+        flex-direction: row;
+        transform: none;
+    }
+    
+    .social-btn {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .section {
+        padding: 130px 15px 15px;
+    }
+    
+    .content-grid,
+    .content-grid.reverse,
+    .download-content,
+    .memory-intro {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .content-grid.reverse {
+        direction: ltr;
+    }
+    
+    .yoyo-types {
+        grid-template-columns: 1fr;
+    }
+    
+    .image-placeholder {
+        min-height: 150px;
+    }
+    
+    .image-placeholder.large {
+        min-height: 200px;
+    }
+    
+    .discord-cta {
+        padding: 25px;
+    }
+    
+    .discord-features {
+        grid-template-columns: 1fr;
+    }
+    
     .history-period {
         padding: 20px;
         margin-bottom: 25px;
@@ -617,17 +542,43 @@ body {
         gap: 10px;
     }
     
-    .fun-fact {
-        padding: 12px;
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+    .yoyo-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .yoyo {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+    
+    .social-floating {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        justify-content: center;
+        margin: 20px auto;
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .section {
+        padding: 120px 10px 10px;
+    }
+    
+    .memory-feature,
+    .discord-feature {
         font-size: 0.9rem;
     }
     
-    .image-content {
-        gap: 15px;
-    }
-}
-
-@media (max-width: 480px) {
     .history-period {
         padding: 15px;
     }
@@ -639,183 +590,34 @@ body {
     .history-period p {
         font-size: 0.9rem;
     }
-}
-
-/* MEJORAS PARA LAS ANIMACIONES */
-.section {
-    min-height: 100vh;
-    padding: 100px 20px 20px;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    opacity: 1;
-    transition: opacity 0.5s ease !important;
-}
-
-.section.active {
-    display: flex;
-}
-
-/* Asegurar que los yoyos tengan buena posición durante animación */
-.yoyo-nav {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 20px;
-    z-index: 1000;
-}
-
-.yoyo {
-    width: 60px;
-    height: 60px;
-    background: #ff6b6b;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 3px solid white;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    position: relative; /* Importante para las animaciones */
-}
-
-/* Animaciones de caída eliminadas (JS removed). */
-
-/* Responsive para animaciones */
-@media (max-width: 768px) {
-    .yoyo-nav {
-        gap: 10px;
+    
+    h1 { 
+        font-size: 1.8rem; 
+        margin-bottom: 15px;
     }
     
-    .yoyo {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-    }
-}
-/* MEJORAS PARA ANIMACIONES MÁS SUAVES */
-.yoyo {
-    width: 60px;
-    height: 60px;
-    background: #ff6b6b;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 3px solid white;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    /* Asegurar buena renderización durante animaciones */
-    will-change: transform;
-    backface-visibility: hidden;
-}
-
-.yoyo-nav {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 20px;
-    z-index: 1000;
-    /* Prevenir saltos durante animación */
-    pointer-events: auto;
-}
-
-/* Estados del yoyo durante animación */
-.yoyo.animating {
-    pointer-events: none;
-}
-
-.section {
-    min-height: 100vh;
-    padding: 100px 20px 20px;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    opacity: 1;
-    transition: opacity 0.5s ease !important;
-}
-
-.section.active {
-    display: flex;
-}
-
-/* Transition overlays removed (handled by JS animation previously) */
-
-/* Responsive para animaciones */
-@media (max-width: 768px) {
-    .yoyo-nav {
-        gap: 10px;
+    h2 { 
+        font-size: 1.3rem; 
+        margin-bottom: 15px;
     }
     
-    .yoyo {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-    }
-}
-
-/* GARANTIZAR POSICIÓN ESTABLE DEL MENÚ */
-.yoyo-nav {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 20px;
-    z-index: 1000;
-    /* Asegurar que el nav esté bien posicionado */
-    background: transparent;
-    padding: 0;
-    margin: 0;
-    width: auto;
-    white-space: nowrap;
-}
-
-.yoyo {
-    width: 60px;
-    height: 60px;
-    background: #ff6b6b;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 3px solid white;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    /* Posición relativa por defecto */
-    position: relative;
-    /* Sin márgenes que afecten el cálculo */
-    margin: 0;
-    flex-shrink: 0;
-}
-
-/* Reset más agresivo para estados animados */
-/* Inline styles (if any) will override these rules; no empty selector needed */
-
-@media (max-width: 768px) {
-    .yoyo-nav {
-        gap: 10px;
-        padding: 0 10px;
+    p {
+        font-size: 0.9rem;
+        line-height: 1.4;
     }
     
-    .yoyo {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
+    .apk-btn {
+        padding: 12px 25px;
+        font-size: 16px;
     }
 }
 
+/* Pantallas muy grandes */
+@media (min-width: 1200px) {
+    .section {
+        padding: 150px 50px 50px;
+    }
+    
+    h1 { font-size: 3rem; }
+    h2 { font-size: 2rem; }
+}

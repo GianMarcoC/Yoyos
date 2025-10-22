@@ -13,44 +13,63 @@ class YoyoNavigator {
         });
 
         this.setupCtaButtons();
+        
+        // Mostrar sección inicial por defecto
+        this.showSection('inicio');
     }
+
     navigateToYoyo(yoyo) {
         const targetSection = yoyo.getAttribute('data-target');
         if (targetSection) {
             this.showSection(targetSection);
+            
+            // Scroll suave al principio de la página
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         }
     }
 
     showSection(sectionId) {
-        this.sections.forEach(section => {
-            section.style.opacity = '0';
-            section.classList.remove('active');
-        });
-
-        const targetSection = document.getElementById(sectionId);
-        if (targetSection) {
-            targetSection.classList.add('active');
-            setTimeout(() => {
-                targetSection.style.opacity = '1';
-            }, 50);
-        }
+    // Ocultar todas las secciones
+    this.sections.forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Mostrar sección objetivo
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.classList.add('active');
+        
+        // Scroll al principio después de un pequeño delay
+        setTimeout(() => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }, 100);
     }
+}
 
     setupCtaButtons() {
         document.querySelectorAll('.cta-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                if (this.isAnimating) return;
                 const targetSection = e.target.getAttribute('data-target');
                 if (targetSection) {
-                    const targetYoyo = document.querySelector(`.yoyo[data-target="${targetSection}"]`);
-                    if (targetYoyo) {
-                        this.animateYoyo(targetYoyo);
-                    }
+                    this.showSection(targetSection);
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
                 }
             });
         });
     }
+
+    
 }
+
 
 // Inicializar
 document.addEventListener('DOMContentLoaded', () => {
@@ -60,11 +79,4 @@ document.addEventListener('DOMContentLoaded', () => {
 // Botón de descarga
 document.querySelector('.apk-btn')?.addEventListener('click', () => {
     alert('¡Próximamente disponible para descarga!');
-});
-
-// Transiciones suaves
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.section').forEach(section => {
-        section.style.transition = 'opacity 0.5s ease';
-    });
 });
